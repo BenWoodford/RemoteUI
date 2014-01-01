@@ -1,6 +1,10 @@
 (function()
 {
 	var trapArea = $( '.mousetrap' ), input = $( '.js-steam-input' ), lastPosition = { x: 0.0, y: 0.0 };
+	var deltaArea = $( '.mousedelta' );
+	var deltaTimer = null;
+	var deltaMouseX = 0, deltaMouseY = 0;
+	var mouseisdown = false;
 
 	// Key trap
 	$( document ).on( {
@@ -53,6 +57,33 @@
 	{
 		SteamRemoteClient.DoPOST( 'mouse/click', { button: 'mouse_left' } );
 	} );
+
+	$(deltaArea).on('mousemove', function(e) {
+		deltaMouseX = e.pageX;
+		deltaMouseY = e.pageY;
+	});
+
+	deltaTimer = setInterval(function() {
+		if(mouseisdown && deltaArea.is(':hover')) {
+			var x = $(deltaArea).offset().left + ($(deltaArea).outerWidth()/2);
+			var y = $(deltaArea).offset().top + ($(deltaArea).outerHeight()/2);
+
+			SteamRemoteClient.DoPOST('mouse/move',
+				{
+					delta_x: ((deltaMouseX - x) / ($(deltaArea).outerWidth()/2)) * 10,
+					delta_y: ((deltaMouseY - y) / ($(deltaArea).outerHeight()/2)) * 10
+				}
+			);
+		}
+	}, 10);
+
+	$(document).on('mousedown', function(e) {
+		mouseisdown = true;
+	});
+
+	$(document).on('mouseup', function(e) {
+		mouseisdown = false;
+	});
 
 	// Get space
 	$( '.js-steam-get-space' ).click( function( e )

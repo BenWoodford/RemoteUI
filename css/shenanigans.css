@@ -10,16 +10,20 @@
 	margin-bottom: 15px;
 }
 
-.mousetrap {
+.mousetrap, .mousedelta {
 	margin-bottom: 0;
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	user-select: none;
 }
 
-.mousetrap h3 {
+.mousetrap h3, .mousedelta h3 {
 	text-align: center;
 	color: #CCC;
+}
+
+.mousedelta {
+	min-height: 200px;
 }
 
 .list-group {
